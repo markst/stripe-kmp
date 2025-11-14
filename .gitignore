@@ -1,0 +1,58 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# iOS/Swift
+*.xcodeproj
+xcuserdata/
+*.xcworkspace
+!default.xcworkspace
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# Kotlin
+.kotlin
+*.kotlin_module
+
+# SPM
+.swiftpm/
+Package.resolved
+
+# Kotlin Native
+.konan/
+
+# Kotlin Multiplatform
+shared/exportedStripeBridge/
+
+# Other
+*.log
+*.hprof
