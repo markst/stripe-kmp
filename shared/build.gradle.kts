@@ -43,7 +43,7 @@ kotlin {
 
 android {
     namespace = "com.fouroneone.stripe"
-    compileSdk = 34
+    compileSdk = 36
     
     defaultConfig {
         minSdk = 24
