@@ -29,7 +29,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(compose.material3)
                 implementation(compose.runtime)
             }
         }
@@ -39,15 +38,18 @@ kotlin {
                 // Official Stripe Android SDK
                 implementation(libs.stripe.android)
                 implementation(libs.androidx.appcompat)
+                implementation(compose.ui)
+                implementation(compose.material3)
             }
         }
+
     }
 }
 
 android {
     namespace = "com.fouroneone.stripe"
     compileSdk = 36
-    
+
     defaultConfig {
         minSdk = 24
     }
