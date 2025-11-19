@@ -1,57 +1,71 @@
 package com.fouroneone.stripe
 
 import android.content.Context
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult as StripePaymentSheetResult
 
-private class AndroidStripePayments(private val context: Context) : StripePayments {
+actual typealias PlatformContext = Context
 
-    @Composable
-    override fun Initialize(publishableKey: String) {
-            PaymentConfiguration.init(
-                context = context,
-                publishableKey = publishableKey
-            )
-    }
+@Composable
+actual fun rememberPaymentSheet(
+    stripePayments: StripePayments,
+    onResult: (PaymentSheetResult) -> Unit
+): PaymentSheetWrapper {
+    val paymentSheet = remember(onResult) {
+        PaymentSheet.Builder(resultCallback = { result: StripePaymentSheetResult ->
+            onResult(result.toCommonResult())
+        })
+    }.build()
 
-    @Composable
-    override fun StripeCheckout(
-        clientSecret: String,
-        onResult: (PaymentSheetResult) -> Unit,
-        content: @Composable () -> Unit
-    ) {
-        val paymentSheet = remember {
-            PaymentSheet.Builder { result ->
-                onResult(result.toCommonResult())
-            }
-        }.build()
-
-        Box(
-            modifier = Modifier.clickable {
-                paymentSheet.presentWithPaymentIntent(
-                    paymentIntentClientSecret = clientSecret,
-                    configuration = null
-                )
-            }
-        ) {
-            content()
-        }
+    return remember(paymentSheet) {
+        AndroidPaymentSheetWrapper(paymentSheet)
     }
 }
 
-@Composable
-actual fun rememberStripePayments(): StripePayments {
-    val context = LocalContext.current
-    return remember(context) {
-        AndroidStripePayments(context)
+private class AndroidStripePayments(private val context: Context) : StripePayments {
+
+    override fun initialize(publishableKey: String) {
+        PaymentConfiguration.init(
+            context = context.applicationContext,
+            publishableKey = publishableKey
+        )
     }
+}
+
+private class AndroidPaymentSheetWrapper(
+    private val paymentSheet: PaymentSheet
+) : PaymentSheetWrapper {
+
+    override fun presentWithPaymentIntent(
+        clientSecret: String,
+        configuration: PaymentSheetConfiguration?
+    ) {
+        val stripeConfig = configuration?.toAndroidConfiguration()
+        paymentSheet.presentWithPaymentIntent(
+            paymentIntentClientSecret = clientSecret,
+            configuration = stripeConfig
+        )
+    }
+}
+
+actual fun getStripePayments(context: PlatformContext): StripePayments {
+    return AndroidStripePayments(context)
+}
+
+private fun PaymentSheetConfiguration.toAndroidConfiguration(): PaymentSheet.Configuration {
+    return PaymentSheet.Configuration(
+        merchantDisplayName = this.merchantDisplayName,
+        customer = if (this.customerId != null && this.customerEphemeralKeySecret != null) {
+            PaymentSheet.CustomerConfiguration(
+                id = this.customerId,
+                ephemeralKeySecret = this.customerEphemeralKeySecret
+            )
+        } else null,
+        allowsDelayedPaymentMethods = this.allowsDelayedPaymentMethods
+    )
 }
 
 private fun StripePaymentSheetResult.toCommonResult(): PaymentSheetResult {
