@@ -56,16 +56,28 @@ actual fun getStripePayments(context: PlatformContext): StripePayments {
 }
 
 private fun PaymentSheetConfiguration.toAndroidConfiguration(): PaymentSheet.Configuration {
-    return PaymentSheet.Configuration(
-        merchantDisplayName = this.merchantDisplayName,
-        customer = if (this.customerId != null && this.customerEphemeralKeySecret != null) {
+    val builder = PaymentSheet.Configuration.Builder(merchantDisplayName = this.merchantDisplayName)
+        .allowsDelayedPaymentMethods(this.allowsDelayedPaymentMethods)
+
+    // Set default billing details with country if provided
+    this.defaultBillingDetails?.country?.let { country ->
+        val billingDetails = PaymentSheet.BillingDetails(
+            address = PaymentSheet.Address(country = country)
+        )
+        builder.defaultBillingDetails(billingDetails)
+    }
+    
+    // Set customer configuration if provided
+    if (this.customerId != null && this.customerEphemeralKeySecret != null) {
+        builder.customer(
             PaymentSheet.CustomerConfiguration(
                 id = this.customerId,
                 ephemeralKeySecret = this.customerEphemeralKeySecret
             )
-        } else null,
-        allowsDelayedPaymentMethods = this.allowsDelayedPaymentMethods
-    )
+        )
+    }
+    
+    return builder.build()
 }
 
 private fun StripePaymentSheetResult.toCommonResult(): PaymentSheetResult {

@@ -25,10 +25,15 @@ import UIKit
     @objc public func presentPaymentSheet(
         paymentIntentClientSecret: String,
         viewController: UIViewController,
+        defaultCountry: String?,
         completion: @escaping (PaymentSheetResultBridge) -> Void
     ) {
         var configuration = PaymentSheet.Configuration()
-        // You can customize configuration here if needed
+        
+        // Set default billing details with country if provided
+        if let country = defaultCountry {
+            configuration.defaultBillingDetails.address = PaymentSheet.Address(country: country)
+        }
 
         let paymentSheet = PaymentSheet(
             paymentIntentClientSecret: paymentIntentClientSecret,

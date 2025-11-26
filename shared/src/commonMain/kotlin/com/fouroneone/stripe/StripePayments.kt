@@ -96,12 +96,23 @@ interface PaymentSheetWrapper {
  * @property customerId The Stripe customer ID if using a saved customer (starts with `cus_`)
  * @property customerEphemeralKeySecret The ephemeral key secret for the customer, required if [customerId] is provided
  * @property allowsDelayedPaymentMethods Whether to allow payment methods that complete after a delay (e.g., bank transfers)
+ * @property defaultBillingDetails Default billing details to pre-fill in the payment sheet
  */
 data class PaymentSheetConfiguration(
     val merchantDisplayName: String,
     val customerId: String? = null,
     val customerEphemeralKeySecret: String? = null,
-    val allowsDelayedPaymentMethods: Boolean = false
+    val allowsDelayedPaymentMethods: Boolean = false,
+    val defaultBillingDetails: BillingDetails? = null
+)
+
+/**
+ * Billing details to pre-fill in the payment sheet.
+ *
+ * @property country The ISO country code (e.g., "AU" for Australia, "US" for United States)
+ */
+data class BillingDetails(
+    val country: String? = null
 )
 
 /**

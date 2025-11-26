@@ -33,9 +33,11 @@ private class IosPaymentSheetWrapper(
         clientSecret: String,
         configuration: PaymentSheetConfiguration?
     ) {
+        val defaultCountry = configuration?.defaultBillingDetails?.country
         stripeBridge.presentPaymentSheetWithPaymentIntentClientSecret(
             paymentIntentClientSecret = clientSecret,
-            viewController = viewController
+            viewController = viewController,
+            defaultCountry = defaultCountry
         ) { result: PaymentSheetResultBridge ->
             val mappedResult = when (result) {
                 PaymentSheetResultBridgeCompleted -> PaymentSheetResult.Completed
