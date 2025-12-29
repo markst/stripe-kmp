@@ -10,6 +10,7 @@ pluginManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        maven("https://packages.jetbrains.team/maven/p/kt/dev")
         mavenCentral()
         gradlePluginPortal()
     }
@@ -18,6 +19,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         google {
+            maven("https://packages.jetbrains.team/maven/p/kt/dev")
             mavenContent {
                 includeGroupAndSubgroups("androidx")
                 includeGroupAndSubgroups("com.android")

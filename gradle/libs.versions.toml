@@ -2,7 +2,7 @@
 agp = "8.11.2"
 appcompat = "1.7.1"
 compose = "1.9.3"
-kotlin = "2.2.21"
+kotlin = "2.2.21-titan-208"
 kotlinx-coroutines = "1.10.2"
 stripe-android = "22.1.0"
 
