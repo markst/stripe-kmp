@@ -1,6 +1,6 @@
 import Foundation
 import StripePaymentSheet
-import UIKit
+import UIKit.UIViewController
 
 /// Bridge wrapper for Stripe iOS SDK
 ///
