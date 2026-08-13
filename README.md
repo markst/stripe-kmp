@@ -19,21 +19,28 @@ platforms.
 
 ## Installation
 
-This library can be used as a Git submodule. Add it to your project and configure it in
+This library can be used as a Git submodule. Configure it as a composite build in your
 `settings.gradle.kts`:
 
 ```kotlin
-include(":stripe-kmp")
-project(":stripe-kmp").projectDir = file("./submodule/stripe/shared")
+includeBuild("./submodules/stripe-kmp") {
+    dependencySubstitution {
+        substitute(module("StripePayments:shared")).using(project(":shared"))
+    }
+}
 ```
 
-Then add the dependency to your shared module:
+Then add the dependency to your shared module using the module notation:
 
 ```kotlin
 commonMain.dependencies {
-    implementation(project(":stripe-kmp"))
+    implementation("StripePayments:shared")
 }
 ```
+
+**Note**: Using `includeBuild` (composite builds) is recommended over `include` as it allows the
+stripe-kmp module to maintain its own build configuration and dependencies independently, while
+still being integrated into your main project.
 
 ## Setup with Dependency Injection
 

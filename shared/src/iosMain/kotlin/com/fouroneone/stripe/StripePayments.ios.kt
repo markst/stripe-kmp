@@ -1,14 +1,15 @@
 package com.fouroneone.stripe
 
-import StripePaymentsBridge.PaymentSheetResultBridge
-import StripePaymentsBridge.PaymentSheetResultBridgeCanceled
-import StripePaymentsBridge.PaymentSheetResultBridgeCompleted
-import StripePaymentsBridge.PaymentSheetResultBridgeFailed
-import StripePaymentsBridge.StripeBridgeWrapper
+import swiftPMImport.StripePayments.shared.PaymentSheetResultBridge
+import swiftPMImport.StripePayments.shared.PaymentSheetResultBridgeCanceled
+import swiftPMImport.StripePayments.shared.PaymentSheetResultBridgeCompleted
+import swiftPMImport.StripePayments.shared.PaymentSheetResultBridgeFailed
+import swiftPMImport.StripePayments.shared.StripeBridgeWrapper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIApplication
+import platform.UIKit.UIViewController
 
 actual abstract class PlatformContext
 
@@ -25,7 +26,7 @@ private class IosStripePayments : StripePayments {
 @OptIn(ExperimentalForeignApi::class)
 private class IosPaymentSheetWrapper(
     private val stripeBridge: StripeBridgeWrapper,
-    private val viewController: objcnames.classes.UIViewController,
+    private val viewController: UIViewController,
     private val onResult: (PaymentSheetResult) -> Unit
 ) : PaymentSheetWrapper {
 
@@ -66,7 +67,7 @@ actual fun rememberPaymentSheet(
     return remember(stripeBridge, viewController, onResult) {
         IosPaymentSheetWrapper(
             stripeBridge = stripeBridge,
-            viewController = viewController as objcnames.classes.UIViewController,
+            viewController = viewController,
             onResult = onResult
         )
     }
