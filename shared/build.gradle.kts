@@ -1,3 +1,5 @@
+@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -5,15 +7,10 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+group = "StripePayments"
+
 kotlin {
     androidTarget()
-
-    swiftPMDependencies {
-        localPackage(
-            path = projectDir.resolve("StripePaymentsBridge").canonicalFile,
-            products = listOf("StripePaymentsBridge")
-        )
-    }
 
     listOf(
         iosArm64(),
@@ -25,12 +22,25 @@ kotlin {
         }
     }
 
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget = "15.0"
+
+        localSwiftPackage(
+            directory = layout.projectDirectory.dir("StripePaymentsBridge"),
+            products = listOf("StripePaymentsBridge"),
+        )
+    }
+
     targets.all {
         compilations.all {
             compilerOptions.configure {
                 freeCompilerArgs.add("-Xexpect-actual-classes")
             }
         }
+    }
+
+    compilerOptions {
+        optIn.add("kotlinx.cinterop.ExperimentalForeignApi")
     }
 
     sourceSets {

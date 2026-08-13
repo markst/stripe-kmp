@@ -45,6 +45,7 @@ DerivedData/
 
 # SPM
 .swiftpm/
+.swiftpm-locks/
 Package.resolved
 
 # Kotlin Native
